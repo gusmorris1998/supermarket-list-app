@@ -1,0 +1,7 @@
+# Environment file
+.env
+
+# Virtual environment
+/venv
+
+/storage
