@@ -36,9 +36,9 @@ class SearchResponse(BaseModel):
 
     @validator('results', pre=True, each_item=True)
     def filter_non_product(cls, v):
-        if v.get("_type") == "PRODUCT":
-            return v  # Keep entry if it's a "PRODUCT"
-        return None  # Discard entry
+        if v.get("_type") == "PRODUCT" and v.get("pricing") is not None:
+            return v  # Keep valid entries
+        return None  # Discard invalid entries
     
     def __init__(self, **data):
         super().__init__(**data)
@@ -50,7 +50,7 @@ def new_session():
     return session
 
 def search_api(session: requests.Session, page_num: int) -> SearchResponse: 
-    url = f"https://www.coles.com.au/_next/data/20241113.01_v4.30.0/en/on-special.json?page={page_num}"
+    url = f"https://www.coles.com.au/_next/data/20241130.04_v4.33.2/en/on-special.json?page={page_num}"
 
     resp = session.get(url)
 

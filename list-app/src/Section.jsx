@@ -17,18 +17,18 @@ function Section(props) {
         setItem('');
     };
 
-
     return (
         <>
             <h3>{props.heading}</h3>
             <List items={items} setItems={setItems}/>
             <input type="text" value={item} onChange={handleChange}/>
-            <Button text="Add" handleClick={handleButtonClick(item)} />
+            <Button text="Add" handleClick={handleButtonClick(item)} color="Green" />
         </>
     )
 }
 
 function List(props) {
+    const [toggleDeal, setToggleDeal] = useState(null);
 
     const handleButtonDelete = (index) => () => {
         const setItems = props.setItems
@@ -43,8 +43,9 @@ function List(props) {
             {props.items.map((item, index) => {
                 return (
                     <>
-                    <ListItem key={item} item={item} />
+                    <ListItem key={item} item={item} handleClick={() => setToggleDeal(index)} />
                     <Button text="Delete" color="Red" handleClick={handleButtonDelete(index)}/>
+                    <Deals item={item} index={index} toggleDeal={toggleDeal}/>
                     </>
                 )
             })}
@@ -52,10 +53,8 @@ function List(props) {
     )
 }
 
-function ListItem(props) {
-    return (
-        <li>{props.item}</li>
-    )
+function ListItem({key, item, handleClick}) {
+    return <li key={key} onClick={handleClick}> {item} </li >
 }
 
 // An example of using default props
@@ -68,6 +67,16 @@ function Button({ text = "Click", color = "Blue", fontSize = 12, handleClick }) 
     return (
         <button onClick={handleClick} style={buttonStyle}>{text}</button>
     )
+}
+
+function Deals({item, index, toggleDeal}) {
+    if (index == toggleDeal) {
+        return (
+            <div>
+            <b>{item}</b>
+            </div>
+        )
+    }
 }
 
 export default Section;
