@@ -2,7 +2,7 @@
 from typing import Literal
 import os, time, json, random
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 from curl_cffi import requests
 from dotenv import load_dotenv
 
@@ -34,7 +34,7 @@ class SearchResponse(BaseModel):
     start: int
     results: list[Product | None]
 
-    @validator('results', pre=True, each_item=True)
+    @field_validator('results', pre=True, each_item=True)
     def filter_non_product(cls, v):
         if v.get("_type") == "PRODUCT" and v.get("pricing") is not None:
             return v  # Keep valid entries
